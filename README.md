@@ -1,4 +1,4 @@
-# MyOS
+# It is an operating system that includes system calls and scheduling strategies
 
 ***Default: Test for System Calls***
 $ make
