@@ -1,8 +1,10 @@
 #include <hardwarecommunication/pci.h>
 #include <drivers/amd_am79c973.h>
+#include <mystdlib.h>
 
 using namespace myos::common;
 using namespace myos::drivers;
+using namespace myos::mystd;
 using namespace myos::hardwarecommunication;
 
 
@@ -63,8 +65,6 @@ bool PeripheralComponentInterconnectController::DeviceHasFunctions(common::uint1
 }
 
 
-void printf(char* str);
-void printfHex(uint8_t);
 
 void PeripheralComponentInterconnectController::SelectDrivers(DriverManager* driverManager, myos::hardwarecommunication::InterruptManager* interrupts)
 {

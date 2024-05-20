@@ -24,8 +24,9 @@ namespace myos
 
     namespace syscalls
     {
-        enum SYSCALLS{ EXIT, FORK, WAITPID, GETPID, EXECV, PRINTF, ADDTASK};
+        enum SYSCALLS{ EXIT, FORK, WAITPID, GETPID, EXECV, NICE, PRINTF, ADDTASK};
         void exit();
+        void nice(Priority priority);
         common::uint32_t execve(void (*entrypoint)());
         common::uint32_t fork();
         void waitpid(common::uint16_t pid);

@@ -1,9 +1,12 @@
 
 #include <drivers/amd_am79c973.h>
+#include <mystdlib.h>
 using namespace myos;
 using namespace myos::common;
 using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
+using namespace myos::mystd;
+
 
  
 
@@ -33,8 +36,6 @@ void RawDataHandler::Send(uint8_t* buffer, uint32_t size)
 
 
 
-void printf(char*);
-void printfHex(uint8_t);
 
 
 amd_am79c973::amd_am79c973(PeripheralComponentInterconnectDeviceDescriptor *dev, InterruptManager* interrupts)

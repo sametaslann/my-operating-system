@@ -11,6 +11,8 @@ namespace myos
 {
     namespace drivers
     {
+        
+        
     
         class KeyboardEventHandler
         {
@@ -19,6 +21,13 @@ namespace myos
 
             virtual void OnKeyDown(char);
             virtual void OnKeyUp(char);
+
+            static char buffer[256];
+            static void writeToBuffer(char* c); 
+            static char* readFromBuffer();
+            static int size;
+            static bool isEnterPressed;
+
         };
         
         class KeyboardDriver : public myos::hardwarecommunication::InterruptHandler, public Driver
@@ -32,6 +41,13 @@ namespace myos
             ~KeyboardDriver();
             virtual myos::common::uint32_t HandleInterrupt(myos::common::uint32_t esp);
             virtual void Activate();
+        };
+
+        class PrintfKeyboardEventHandler : public KeyboardEventHandler
+        {
+
+        public:
+            void OnKeyDown(char c);
         };
 
     }

@@ -5,6 +5,13 @@
 GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
+PART = -DSYSCALL_TEST
+PT = -DNOT_SHOW
+SPEED = -DFAST 
+#SPEED -> timer interrupt speed
+#PT -> print process table each context switch
+#PART -> represent which partition of the assignment will be used
+
 
 objects = obj/loader.o \
           obj/gdt.o \
@@ -25,6 +32,7 @@ objects = obj/loader.o \
           obj/gui/window.o \
           obj/gui/desktop.o \
           obj/net/etherframe.o \
+		  obj/mystdlib.o \
           obj/kernel.o
 
 
@@ -34,7 +42,7 @@ run: mykernel.iso
 
 obj/%.o: src/%.cpp
 	mkdir -p $(@D)
-	gcc $(GCCPARAMS) -c -o $@ $<
+	gcc $(GCCPARAMS) $(PART) $(PT) $(SPEED) -c -o $@ $<
 
 obj/%.o: src/%.s
 	mkdir -p $(@D)

@@ -1,12 +1,11 @@
 
 #include <syscalls.h>
- 
+#include <mystdlib.h>
 using namespace myos;
 using namespace myos::common;
 using namespace myos::syscalls;
-
+using namespace myos::mystd;
 using namespace myos::hardwarecommunication;
-
 
 /*syscall interrupts*/
 
@@ -28,6 +27,10 @@ uint32_t syscalls::execve(void (*entrypoint)()) {
     return ret;
     
 }
+void syscalls::nice(Priority newPriority)
+{
+    asm("int $0x80" :: "a" (SYSCALLS::NICE), "c" ((int)newPriority));
+}
 
 uint32_t syscalls::fork()
 {
@@ -47,16 +50,12 @@ void syscalls::waitpid(uint16_t pid) {
 void syscalls::sysprintf(char* str)
 {
     asm("int $0x80" : : "a" (SYSCALLS::PRINTF), "c" (str));
+
 }
 
-/*End of syscall interrupts*/
 
 
 
-
-void printf(char*);
-
-void printfHex(common::uint8_t key);
  
 SyscallHandler::SyscallHandler(InterruptManager* interruptManager, uint8_t InterruptNumber)
 :    InterruptHandler(interruptManager, InterruptNumber  + interruptManager->HardwareInterruptOffset())
@@ -103,6 +102,12 @@ uint32_t SyscallHandler::HandleInterrupt(uint32_t esp)
 
         case SYSCALLS::EXECV:
             cpu->ebx = interruptManager->taskManager->sys_execve((void (*)())(cpu->ecx));
+            return SyscallHandler::Schedule(esp);
+            break;
+
+        case SYSCALLS::NICE:
+            
+            interruptManager->taskManager->sys_nice((Priority)cpu->ecx);
             return SyscallHandler::Schedule(esp);
             break;
                     

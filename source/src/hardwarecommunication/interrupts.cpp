@@ -1,12 +1,11 @@
 
 #include <hardwarecommunication/interrupts.h>
+#include<mystdlib.h>
 using namespace myos;
 using namespace myos::common;
 using namespace myos::hardwarecommunication;
 
 
-void printf(char* str);
-void printfHex(uint8_t);
 
 
 
@@ -175,6 +174,10 @@ uint32_t InterruptManager::HandleInterrupt(uint8_t interrupt, uint32_t esp)
 }
 
 
+bool InterruptManager::isWaitingForInput = false;
+
+static int counter = 0;
+
 uint32_t InterruptManager::DoHandleInterrupt(uint8_t interrupt, uint32_t esp)
 {
     if(handlers[interrupt] != 0)
@@ -185,11 +188,23 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interrupt, uint32_t esp)
     {
         // printf("UNHANDLED INTERRUPT 0x");
         // printfHex(interrupt);
-    }
+    }   
     
     if(interrupt == hardwareInterruptOffset)
     {
-        esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
+        #ifdef SLOW
+        if (counter % 50 == 0 && !InterruptManager::isWaitingForInput)
+        {
+            esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
+            counter = 0;
+        }
+        counter++;
+        #else
+         if (!InterruptManager::isWaitingForInput)
+            esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
+            counter = 0;
+        #endif
+          
     }
 
     // hardware interrupts must be acknowledged
@@ -202,7 +217,6 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interrupt, uint32_t esp)
 
     return esp;
 }
-
 
 
 

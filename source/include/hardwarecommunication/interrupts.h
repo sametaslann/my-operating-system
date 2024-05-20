@@ -110,6 +110,7 @@ namespace myos
                 Port8BitSlow programmableInterruptControllerSlaveDataPort;
 
             public:
+                static bool isWaitingForInput;
                 TaskManager *taskManager;
                 InterruptManager(myos::common::uint16_t hardwareInterruptOffset, myos::GlobalDescriptorTable* globalDescriptorTable, myos::TaskManager* taskManager);
                 ~InterruptManager();

@@ -1,12 +1,12 @@
 #include <drivers/ata.h>
+#include <mystdlib.h>
 
 using namespace myos;
 using namespace myos::common;
 using namespace myos::drivers;
+using namespace myos::mystd;
 
 
-void printf(char* str);
-void printfHex(uint8_t);
 
 AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(bool master, common::uint16_t portBase)
 :   dataPort(portBase),

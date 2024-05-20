@@ -1,8 +1,10 @@
 
 #include <drivers/keyboard.h>
+#include <mystdlib.h>
 
 using namespace myos::common;
 using namespace myos::drivers;
+using namespace myos::mystd;
 using namespace myos::hardwarecommunication;
 
 
@@ -14,10 +16,47 @@ void KeyboardEventHandler::OnKeyDown(char)
 {
 }
 
+
+//write to global buffer
+void PrintfKeyboardEventHandler::OnKeyDown(char c)
+{
+    char* foo = " ";
+    foo[0] = c;
+    printf(foo);
+    KeyboardEventHandler::writeToBuffer(foo);
+}
+
 void KeyboardEventHandler::OnKeyUp(char)
 {
 }
 
+int KeyboardEventHandler::size = 0;
+bool KeyboardEventHandler::isEnterPressed = false;
+char KeyboardEventHandler::buffer[256] = {0};
+
+
+
+// This buffer stores the keys pressed by the user until "\n" is pressed
+void KeyboardEventHandler::writeToBuffer(char *c)
+{
+    if (c[0] == '\n')
+        isEnterPressed = true;
+    
+    buffer[size++] = c[0];
+}
+
+char* KeyboardEventHandler::readFromBuffer()
+{
+    if (size == 0)
+        return nullptr;
+    if (buffer[size - 1] != '\n')
+        return nullptr;
+    
+    buffer[size - 1] = '\0';
+    size = 0;
+    isEnterPressed = false;
+    return buffer;
+}
 
 
 
@@ -34,8 +73,6 @@ KeyboardDriver::~KeyboardDriver()
 {
 }
 
-void printf(char*);
-void printfHex(uint8_t);
 
 void KeyboardDriver::Activate()
 {
