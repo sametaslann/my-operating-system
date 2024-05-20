@@ -1,5 +1,4 @@
-# It is an operating system that includes system calls and scheduling strategies  
-
+# Compiling and Running
 ***Default: Test for System Calls***  
 $ make
 
